@@ -1,13 +1,23 @@
 
 import './App.css'
-import { Button } from './components/ui/button';
+import Footer from './components/footer';
+import Input from './components/input';
+import Nav from './components/nav';
+import Settings from './components/settings';
+import { ThemeProvider } from './components/theam-provider';
 
 function App() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold">Hello world!</h1>
-      <Button>Click me</Button>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <main className="h-screen flex flex-col">
+          <Nav />
+          <Settings />
+          <Input maxLength={8} />
+          <Footer />
+        </main>
+      </ThemeProvider>
     </>
   );
 }
