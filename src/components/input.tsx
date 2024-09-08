@@ -6,18 +6,27 @@ import {
 
 import { REGEXP_ONLY_CHARS } from "input-otp";
 
-export default function Input(props: { maxLength: number }) {
+
+export default function Input(props: {
+  maxLength: number;
+  word: string;
+  setWord: Function;
+
+}) {
   return (
     <>
-      <div className="px-2 py-1 flex justify-around h-full ">
-        <InputOTP maxLength={props.maxLength} pattern={REGEXP_ONLY_CHARS}>
+        <InputOTP 
+          maxLength={props.maxLength}
+          pattern={REGEXP_ONLY_CHARS}
+          value={props.word}
+          onChange={(e) => props.setWord(e)}
+        >
           <InputOTPGroup>
             {Array.from({ length: props.maxLength }, (_, index) => (
               <InputOTPSlot index={index} key={index} />
             ))}
           </InputOTPGroup>
         </InputOTP>
-      </div>
     </>
   );
 }
