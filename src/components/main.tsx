@@ -1,11 +1,9 @@
 import Input from "./input";
 import Settings from "./settings";
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
 
 import Confetti from "react-confetti";
-import { getRandomValues } from "crypto";
-import { url } from "inspector";
+
 
 export default function Main() {
   const [word, setWord] = useState(""); // The random word from the backend

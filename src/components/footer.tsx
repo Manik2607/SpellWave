@@ -4,8 +4,8 @@ import {
   Mail,
   Github,
   Twitter,
-  FileText,
-  Shield,
+  // FileText,
+  // Shield,
   Terminal,
   Zap,
 } from "lucide-react";
