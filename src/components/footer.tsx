@@ -20,7 +20,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-gray-900 text-gray-400 py-2 px-4">
+    <footer className="bg-secondary text-gray-400 py-2 px-4">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex space-x-4">
           {footerItems.map((item, index) => (

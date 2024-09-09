@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 
 import Confetti from "react-confetti";
+import { getRandomValues } from "crypto";
+import { url } from "inspector";
 
 export default function Main() {
   const [word, setWord] = useState(""); // The random word from the backend
   const [inputWord, setInputWord] = useState(""); // User's input
   const [result, setResult] = useState(false);
 
-  const [wrongCounter, setwrongCounter] = useState(0);
+  const [wrongCounter, setwrongCounter] = useState(1);
 
   const { width, height } =
     typeof window !== "undefined"
@@ -35,15 +37,31 @@ export default function Main() {
     CheckSpell();
   }, [inputWord]);
   const fetchRandomWord = async () => {
-    const response = await fetch("https://api.datamuse.com/words?sp=???????");
+    //randome no between 3 and 8
+    const no = Math.floor(Math.random() * 5) + 6;
+    var url = `https://api.datamuse.com/words?sp=`;
+    for (let i = 0; i < no; i++) {
+      url += "?";
+    }
+    const response = await fetch(url);
     const data = await response.json();
     const index = Math.floor(Math.random() * data.length);
     setWord(data[index].word);
     console.log(data[index].word);
-    speakWord(data[index].word);
+    speakString(data[index].word);
   };
-  const speakWord = (wordToSpeak: string) => {
-    const utterance = new SpeechSynthesisUtterance(wordToSpeak);
+  const speakWord = () => {
+    const utterance = new SpeechSynthesisUtterance(word);
+    //change the voice
+    // console.log(speechSynthesis.getVoices());
+    utterance.voice = speechSynthesis.getVoices()[2];
+    window.speechSynthesis.speak(utterance);
+  };
+  const speakString = (text:string) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    //change the voice
+    // console.log(speechSynthesis.getVoices());
+    utterance.voice = speechSynthesis.getVoices()[2];
     window.speechSynthesis.speak(utterance);
   };
 
@@ -53,7 +71,7 @@ export default function Main() {
     if(word.length === inputWord.length){
         if (word === inputWord) {
             setResult(true);
-            setwrongCounter(0);
+            setwrongCounter(1);
         }else{
             setwrongCounter(wrongCounter + 1);
             console.log(wrongCounter);
@@ -70,11 +88,9 @@ export default function Main() {
   },[wrongCounter])
   return (
     <>
-      {result && <Confetti width={width} height={height} />}
+      {result && <Confetti numberOfPieces={500} width={width} height={height} />}
 
-      <Settings />
-      <Button onClick={fetchRandomWord}>Next</Button>
-      <Button onClick={() =>{ speakWord(word)}}>Speak</Button>
+      <Settings next={fetchRandomWord} speak={speakWord}/>
       <div className="px-2 py-1 flex justify-center flex-col w-full h-full ">
         <div className="flex justify-center">
           <Input
@@ -85,7 +101,7 @@ export default function Main() {
         </div>
 
         {wrongCounter > 3 && (
-          <h1 className="text-center text-red-900 text-xl ">{word}</h1>
+          <h1 className="text-center text-red-800 text-xl ">{word}</h1>
         )}
       </div>
 
