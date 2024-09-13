@@ -12,15 +12,15 @@ import {
 
 export default function Footer() {
   const footerItems = [
-    { icon: Mail, label: "contact" },
-    { icon: Github, label: "github" },
-    { icon: Twitter, label: "twitter" },
+    { icon: Mail, label: "contact", link: "https://manik-dev.vercel.app" },
+    { icon: Github, label: "github", link: "https://github.com/manik2607" },
+    // { icon: Twitter, label: "twitter", link: "https://x" }
     // { icon: FileText, label: "terms" },
     // { icon: Shield, label: "security" },
   ];
 
   return (
-    <footer className="bg-secondary text-gray-400 py-2 px-4">
+    <footer className="bg-accent text-gray-400 py-2 px-4">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex space-x-4">
           {footerItems.map((item, index) => (
@@ -29,6 +29,8 @@ export default function Footer() {
               variant="ghost"
               size="sm"
               className="text-gray-400 hover:text-gray-100"
+              //redirect to github, twitter, etc
+              onClick={() => window.open(item.link, "_blank")}
             >
               <item.icon className="h-4 w-4 mr-1" />
               {item.label}

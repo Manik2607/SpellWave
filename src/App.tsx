@@ -4,8 +4,9 @@ import Footer from './components/footer';
 
 import Main from './components/main';
 import Nav from './components/nav';
+// import TabTest from './components/TabTest';
 
-import { ThemeProvider } from './components/theam-provider';
+import { ThemeProvider } from './components/ui/theam-provider';
 
 function App() {
 
@@ -15,8 +16,9 @@ function App() {
         <main className="h-screen flex flex-col">
           <Nav />
           <Main/>
-          <Footer />
+          <Footer />  
         </main>
+        {/* <TabTest/> */}
       </ThemeProvider>
     </>
   );

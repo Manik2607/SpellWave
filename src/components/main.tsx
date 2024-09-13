@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import Confetti from "react-confetti";
 
-
 export default function Main() {
   const [word, setWord] = useState(""); // The random word from the backend
   const [inputWord, setInputWord] = useState(""); // User's input
@@ -27,7 +26,7 @@ export default function Main() {
         setInputWord("");
         setResult(false);
         fetchRandomWord();
-      }, 3000);
+      }, 1000);
     }
   }, [result]);
 
@@ -36,7 +35,7 @@ export default function Main() {
   }, [inputWord]);
   const fetchRandomWord = async () => {
     //randome no between 3 and 8
-    const no = Math.floor(Math.random() * 5) + 6;
+    const no = Math.floor(Math.random() * 5) + 4;
     var url = `https://api.datamuse.com/words?sp=`;
     for (let i = 0; i < no; i++) {
       url += "?";
@@ -55,7 +54,7 @@ export default function Main() {
     utterance.voice = speechSynthesis.getVoices()[2];
     window.speechSynthesis.speak(utterance);
   };
-  const speakString = (text:string) => {
+  const speakString = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
     //change the voice
     // console.log(speechSynthesis.getVoices());
@@ -63,38 +62,42 @@ export default function Main() {
     window.speechSynthesis.speak(utterance);
   };
 
-
-
   const CheckSpell = () => {
-    if(word.length === inputWord.length){
-        if (word === inputWord) {
-            setResult(true);
-            setwrongCounter(1);
-        }else{
-            setwrongCounter(wrongCounter + 1);
-            console.log(wrongCounter);
-        }
-    }
-};
-    useEffect(()=>{
-    if (wrongCounter > 3) {
-        setTimeout(() => {
-            setwrongCounter(0);
+    if (word.length === inputWord.length) {
+      if (word === inputWord) {
+        setResult(true);
 
-        },3000);
+        setwrongCounter(1);
+      } else {
+        setwrongCounter(wrongCounter + 1);
+        console.log(wrongCounter);
+      }
     }
-  },[wrongCounter])
+  };
+  useEffect(() => {
+    if (wrongCounter > 3) {
+      setTimeout(() => {
+        setwrongCounter(0);
+      }, 3000);
+    }
+  }, [wrongCounter]);
+
+  const [wrong, setWrong] = useState(false);
   return (
     <>
-      {result && <Confetti numberOfPieces={500} width={width} height={height} />}
+      {false && (
+        <Confetti numberOfPieces={500} width={width} height={height} />
+      )}
 
-      <Settings next={fetchRandomWord} speak={speakWord}/>
+      <Settings next={fetchRandomWord} speak={speakWord} />
       <div className="px-2 py-1 flex justify-center flex-col w-full h-full ">
         <div className="flex justify-center">
           <Input
             maxLength={word.length}
             word={inputWord}
             setWord={setInputWord}
+            wrong={wrong}
+            right={result}
           />
         </div>
 

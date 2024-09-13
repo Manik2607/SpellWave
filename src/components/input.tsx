@@ -6,15 +6,19 @@ import {
 
 import { REGEXP_ONLY_CHARS } from "input-otp";
 
+
 export default function Input(props: {
   maxLength: number;
   word: string;
   setWord: Function;
+  wrong:boolean;
+  right:boolean;
 }) {
+
   return (
     <>
       <InputOTP
-        spellCheck = {false}
+        spellCheck={false}
         maxLength={props.maxLength}
         pattern={REGEXP_ONLY_CHARS}
         value={props.word}
@@ -26,7 +30,9 @@ export default function Input(props: {
             <InputOTPSlot
               index={index}
               key={index}
-              className=" text-3xl uppercase  rounded-none min-h-12 min-w-12"
+              className={`${props.wrong ? " border-destructive text-destructive" : ""}
+              ${props.right ? " border-green-400 text-green-400" : ""}
+               text-3xl uppercase rounded-none min-h-12 min-w-12`}
             ></InputOTPSlot>
           ))}
         </InputOTPGroup>

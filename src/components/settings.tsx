@@ -11,7 +11,7 @@ import { Button } from "./ui/button";
 
 export default function Settings(props:{next:Function,speak:Function}) {
   return (
-    <div className="bg-secondary px-2 py-1 flex rounded-xl mx-48">
+    <div className="bg-accent px-2 py-1 flex rounded-xl mx-48">
       <Button
         variant="ghost"
         className="text-gray-400 hover:text-gray-100 my-auto"
@@ -21,10 +21,10 @@ export default function Settings(props:{next:Function,speak:Function}) {
       <span className="w-2 h-10 bg-background rounded-lg"></span>
 
       <Select>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue  placeholder="Select Difficulty" />
+        <SelectTrigger className="w-[180px] my-auto mx-4 text-gray-400 hover:text-gray-100">
+          <SelectValue placeholder="Select Difficulty" />
         </SelectTrigger>
-        <SelectContent >
+        <SelectContent>
           <SelectGroup>
             <SelectLabel>Difficulty</SelectLabel>
             <SelectItem value="very easy">Very easy</SelectItem>
