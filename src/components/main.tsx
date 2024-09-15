@@ -10,6 +10,7 @@ export default function Main() {
   const [result, setResult] = useState(false);
 
   const [wrongCounter, setwrongCounter] = useState(1);
+  const [wrong, setWrong] = useState(false);
 
   const { width, height } =
     typeof window !== "undefined"
@@ -66,12 +67,15 @@ export default function Main() {
     if (word.length === inputWord.length) {
       if (word === inputWord) {
         setResult(true);
-
         setwrongCounter(1);
       } else {
         setwrongCounter(wrongCounter + 1);
+        setWrong(true);
         console.log(wrongCounter);
       }
+    }else{
+      setWrong(false);
+      setResult(false);
     }
   };
   useEffect(() => {
@@ -80,9 +84,17 @@ export default function Main() {
         setwrongCounter(0);
       }, 3000);
     }
+    
   }, [wrongCounter]);
+  useEffect(() => {
+  
+    setTimeout(() => {
+      setWrong(false);
+    }, 1000);
 
-  const [wrong, setWrong] = useState(false);
+    
+  }, [wrong]);
+
   return (
     <>
       {false && (
