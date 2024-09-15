@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   Mail,
   Github,
-  Twitter,
+  // Twitter,
   // FileText,
   // Shield,
   Terminal,
@@ -13,7 +13,7 @@ import {
 export default function Footer() {
   const footerItems = [
     { icon: Mail, label: "contact", link: "https://manik-dev.vercel.app" },
-    { icon: Github, label: "github", link: "https://github.com/manik2607" },
+    { icon: Github, label: "github", link: "https://github.com/manik2607/spellwave" },
     // { icon: Twitter, label: "twitter", link: "https://x" }
     // { icon: FileText, label: "terms" },
     // { icon: Shield, label: "security" },

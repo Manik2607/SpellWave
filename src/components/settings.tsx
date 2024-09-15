@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -8,13 +9,21 @@ import {
   SelectLabel,
 } from "@/components/ui/select";
 import { Button } from "./ui/button";
+import SettingsPanel from "./settingsPanel";
 
-export default function Settings(props:{next:Function,speak:Function}) {
+export default function Settings(props: { next: Function; speak: Function }) {
+  const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
+  
   return (
     <div className="bg-accent px-2 py-1 flex rounded-xl mx-48">
+      <SettingsPanel
+        isOpen={isSettingsPanelOpen}
+        setIsOpen={setIsSettingsPanelOpen}
+      />
       <Button
         variant="ghost"
         className="text-gray-400 hover:text-gray-100 my-auto"
+        onClick={() => setIsSettingsPanelOpen(!isSettingsPanelOpen)}
       >
         Settings
       </Button>
@@ -37,6 +46,7 @@ export default function Settings(props:{next:Function,speak:Function}) {
 
         <div className="w-full"></div>
       </Select>
+      
       <Button
         variant="ghost"
         className="text-gray-400 hover:text-gray-100 my-auto"
