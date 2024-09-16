@@ -20,8 +20,11 @@ export default function Settings(props: {
   setPitch: Function;
   setSpeed: Function;
   setVoice: Function;
+  meaning: Function;
 }) {
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
+
+
 
   return (
     <div className="bg-accent px-2 py-1 flex rounded-xl mx-48">
@@ -65,7 +68,7 @@ export default function Settings(props: {
       <Button
         variant="ghost"
         className="text-gray-400 hover:text-gray-100 my-auto"
-        onClick={() => {}}
+        onClick={() => {props.meaning()}}
       >
         Meaning
       </Button>

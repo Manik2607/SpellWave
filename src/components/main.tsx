@@ -1,10 +1,14 @@
 import Input from "./input";
 import Settings from "./settings";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import Confetti from "react-confetti";
+import { Toaster } from "./ui/toaster";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Main() {
+  const { toast } = useToast();
+
   const [word, setWord] = useState(""); // The random word from the backend
   const [inputWord, setInputWord] = useState(""); // User's input
   const [result, setResult] = useState(false);
@@ -17,6 +21,37 @@ export default function Main() {
   const [speed, setSpeed] = useState(1);
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
 
+  //functions
+
+  //show a card with meaning of the word using dictonary api
+  const onMeaningPressed = async () => {
+    try {
+      const response = await fetch(
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      if (
+        data &&
+        data.length > 0 &&
+        data[0].meanings &&
+        data[0].meanings.length > 0
+      ) {
+        toast({
+          title: word,
+          description: data[0].meanings[0].definitions[0].definition,
+        });
+        console.log(data[0].meanings[0].definitions[0].definition);
+      } else {
+        console.log("No definition found");
+      }
+    } catch (error) {
+      console.error("Error fetching the word meaning:", error);
+      console.log("Error fetching the word meaning");
+    }
+  };
   const { width, height } =
     typeof window !== "undefined"
       ? { width: window.innerWidth - 10, height: window.innerHeight - 10 }
@@ -97,10 +132,55 @@ export default function Main() {
     }, 1000);
   }, [wrong]);
 
+  const [currentlyPressedKeys, setCurrentlyPressedKeys] = useState<{
+    [key: string]: boolean;
+  }>({});
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.repeat) return;
+      setCurrentlyPressedKeys((prevKeys) => ({
+        ...prevKeys,
+        [event.key]: true,
+      }));
+
+      if (event.key === "Escape") {
+        console.log("Esc key pressed");
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      setCurrentlyPressedKeys((prevKeys) => ({
+        ...prevKeys,
+        [event.key]: false,
+      }));
+    };
+
+    // Add event listeners
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (currentlyPressedKeys["Enter"]) {
+      fetchRandomWord();
+    } else if (currentlyPressedKeys["`"]) {
+      speakWord();
+    }else if(currentlyPressedKeys[" "]){
+      onMeaningPressed();
+    }
+  }, [currentlyPressedKeys]);
+
   return (
     <>
       {false && <Confetti numberOfPieces={500} width={width} height={height} />}
-
+      <Toaster />
       <Settings
         voice={voice}
         speed={speed}
@@ -110,21 +190,31 @@ export default function Main() {
         setVoice={setVoice}
         next={fetchRandomWord}
         speak={speakWord}
+        meaning={onMeaningPressed}
       />
-      <div className="px-2 py-1 flex justify-center flex-col w-full h-full ">
-        <div className="flex justify-center">
-          <Input
-            maxLength={word.length}
-            word={inputWord}
-            setWord={setInputWord}
-            wrong={wrong}
-            right={result}
-          />
-        </div>
+      <div className="w-full h-full ">
+        <div className="flex justify-center flex-col">
+          <div className="flex flex-col justify-center m-52">
+            <div className="m-auto">
+              <Input
+                maxLength={word.length}
+                word={inputWord}
+                setWord={setInputWord}
+                wrong={wrong}
+                right={result}
+              />
+            </div>
 
-        {wrongCounter > 3 && (
-          <h1 className="text-center text-red-800 text-xl ">{word}</h1>
-        )}
+            {wrongCounter > 3 && (
+              <h1 className="text-center text-red-800 text-xl ">{word}</h1>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col justify-center text-sm font-mono text-gray-500">
+          <p className="text-center">Space - Find Meaning</p>
+          <p className="text-center">Enter - Skip Word</p>
+          <p className="text-center">` - Speak Word</p>
+        </div>
       </div>
 
       {/* <Button onClick={CheckSpell}>Check Spell</Button> */}

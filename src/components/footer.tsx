@@ -37,6 +37,9 @@ export default function Footer() {
             </Button>
           ))}
         </div>
+        <p>
+          Made with <span className="text-red-500">♥</span> by Manik
+        </p>
         <div className="flex items-center space-x-4">
           <Button
             variant="ghost"
