@@ -1,6 +1,6 @@
 import Input from "./input";
 import Settings from "./settings";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 import Confetti from "react-confetti";
 import { Toaster } from "./ui/toaster";
