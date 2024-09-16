@@ -11,14 +11,29 @@ import {
 import { Button } from "./ui/button";
 import SettingsPanel from "./settingsPanel";
 
-export default function Settings(props: { next: Function; speak: Function }) {
+export default function Settings(props: {
+  next: Function;
+  speak: Function;
+  pitch: number;
+  speed: number;
+  voice: SpeechSynthesisVoice | null;
+  setPitch: Function;
+  setSpeed: Function;
+  setVoice: Function;
+}) {
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
-  
+
   return (
     <div className="bg-accent px-2 py-1 flex rounded-xl mx-48">
       <SettingsPanel
         isOpen={isSettingsPanelOpen}
         setIsOpen={setIsSettingsPanelOpen}
+        pitch={props.pitch}
+        speed={props.speed}
+        voice={props.voice}
+        setPitch={props.setPitch}
+        setSpeed={props.setSpeed}
+        setVoice={props.setVoice}
       />
       <Button
         variant="ghost"
@@ -46,7 +61,7 @@ export default function Settings(props: { next: Function; speak: Function }) {
 
         <div className="w-full"></div>
       </Select>
-      
+
       <Button
         variant="ghost"
         className="text-gray-400 hover:text-gray-100 my-auto"

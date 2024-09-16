@@ -1,18 +1,24 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-const SettingsPanel = (props: { isOpen: Boolean; setIsOpen: Function }) => {
-  const [pitch, setPitch] = useState(1);
-  const [speed, setSpeed] = useState(1);
-  const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
-  const [text,setText] = useState("Hello, I am a text to speech engine");
+const SettingsPanel = (props: {
+  isOpen: Boolean;
+  pitch: number;
+  speed: number;
+  voice: SpeechSynthesisVoice | null;
+  setIsOpen: Function;
+  setPitch: Function;
+  setSpeed: Function;
+  setVoice: Function;
+}) => {
+  const [text, setText] = useState("Hello, I am a text to speech engine");
 
   const voices = window.speechSynthesis.getVoices();
   const speakString = () => {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = voice;
-    utterance.pitch = pitch;
-    utterance.rate = speed;
+    utterance.voice = props.voice;
+    utterance.pitch = props.pitch;
+    utterance.rate = props.speed;
     window.speechSynthesis.speak(utterance);
   };
   return (
@@ -40,8 +46,8 @@ const SettingsPanel = (props: { isOpen: Boolean; setIsOpen: Function }) => {
                     min="0"
                     max="3"
                     step="0.1"
-                    value={pitch}
-                    onChange={(e) => setPitch(parseFloat(e.target.value))}
+                    value={props.pitch}
+                    onChange={(e) => props.setPitch(parseFloat(e.target.value))}
                     className="w-full"
                   />
                 </div>
@@ -52,17 +58,17 @@ const SettingsPanel = (props: { isOpen: Boolean; setIsOpen: Function }) => {
                     min="0.3"
                     max="3"
                     step="0.1"
-                    value={speed}
-                    onChange={(e) => setSpeed(parseFloat(e.target.value))}
+                    value={props.speed}
+                    onChange={(e) => props.setSpeed(parseFloat(e.target.value))}
                     className="w-full"
                   />
                 </div>
                 <div className="mb-4">
                   <label className="block mb-2">Speaker</label>
                   <select
-                    value={voice?.name}
+                    value={props.voice?.name}
                     onChange={(e) =>
-                      setVoice(
+                      props.setVoice(
                         voices.find((v) => v.name === e.target.value) || null
                       )
                     }

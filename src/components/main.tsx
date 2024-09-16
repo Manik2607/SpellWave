@@ -12,6 +12,11 @@ export default function Main() {
   const [wrongCounter, setwrongCounter] = useState(1);
   const [wrong, setWrong] = useState(false);
 
+  //speach settings
+  const [pitch, setPitch] = useState(1);
+  const [speed, setSpeed] = useState(1);
+  const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
+
   const { width, height } =
     typeof window !== "undefined"
       ? { width: window.innerWidth - 10, height: window.innerHeight - 10 }
@@ -41,6 +46,7 @@ export default function Main() {
     for (let i = 0; i < no; i++) {
       url += "?";
     }
+    setInputWord("");
     const response = await fetch(url);
     const data = await response.json();
     const index = Math.floor(Math.random() * data.length);
@@ -50,16 +56,16 @@ export default function Main() {
   };
   const speakWord = () => {
     const utterance = new SpeechSynthesisUtterance(word);
-    //change the voice
-    // console.log(speechSynthesis.getVoices());
-    utterance.voice = speechSynthesis.getVoices()[2];
+    utterance.voice = voice;
+    utterance.pitch = pitch;
+    utterance.rate = speed;
     window.speechSynthesis.speak(utterance);
   };
   const speakString = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
-    //change the voice
-    // console.log(speechSynthesis.getVoices());
-    utterance.voice = speechSynthesis.getVoices()[2];
+    utterance.voice = voice;
+    utterance.pitch = pitch;
+    utterance.rate = speed;
     window.speechSynthesis.speak(utterance);
   };
 
@@ -73,7 +79,7 @@ export default function Main() {
         setWrong(true);
         console.log(wrongCounter);
       }
-    }else{
+    } else {
       setWrong(false);
       setResult(false);
     }
@@ -84,24 +90,27 @@ export default function Main() {
         setwrongCounter(0);
       }, 3000);
     }
-    
   }, [wrongCounter]);
   useEffect(() => {
-  
     setTimeout(() => {
       setWrong(false);
     }, 1000);
-
-    
   }, [wrong]);
 
   return (
     <>
-      {false && (
-        <Confetti numberOfPieces={500} width={width} height={height} />
-      )}
+      {false && <Confetti numberOfPieces={500} width={width} height={height} />}
 
-      <Settings next={fetchRandomWord} speak={speakWord} />
+      <Settings
+        voice={voice}
+        speed={speed}
+        pitch={pitch}
+        setPitch={setPitch}
+        setSpeed={setSpeed}
+        setVoice={setVoice}
+        next={fetchRandomWord}
+        speak={speakWord}
+      />
       <div className="px-2 py-1 flex justify-center flex-col w-full h-full ">
         <div className="flex justify-center">
           <Input
