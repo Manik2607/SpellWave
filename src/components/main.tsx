@@ -192,8 +192,8 @@ export default function Main() {
         speak={speakWord}
         meaning={onMeaningPressed}
       />
-      <div className="w-full h-full ">
-        <div className="flex justify-center flex-col">
+      <div className="flex flex-col w-full h-full ">
+        <div className="flex justify-center flex-col flex-grow">
           <div className="flex flex-col justify-center m-52">
             <div className="m-auto">
               <Input
