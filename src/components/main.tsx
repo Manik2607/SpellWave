@@ -6,11 +6,13 @@ import Confetti from "react-confetti";
 import { Toaster } from "./ui/toaster";
 import { useToast } from "@/hooks/use-toast";
 
+import SettingsContext from "./SettingsContext";
+
 export default function Main() {
   const { toast } = useToast();
 
-  const [word, setWord] = useState(""); // The random word from the backend
-  const [inputWord, setInputWord] = useState(""); // User's input
+  const [word, setWord] = useState("");
+  const [inputWord, setInputWord] = useState("");
   const [result, setResult] = useState(false);
 
   const [wrongCounter, setwrongCounter] = useState(1);
@@ -21,7 +23,10 @@ export default function Main() {
   const [speed, setSpeed] = useState(1);
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
 
-  //functions
+
+
+
+
 
   //show a card with meaning of the word using dictonary api
   const onMeaningPressed = async () => {
@@ -181,17 +186,22 @@ export default function Main() {
     <>
       {false && <Confetti numberOfPieces={500} width={width} height={height} />}
       <Toaster />
-      <Settings
-        voice={voice}
-        speed={speed}
-        pitch={pitch}
-        setPitch={setPitch}
-        setSpeed={setSpeed}
-        setVoice={setVoice}
-        next={fetchRandomWord}
-        speak={speakWord}
-        meaning={onMeaningPressed}
-      />
+      <SettingsContext.Provider value={
+        {
+          voice,
+          speed,
+          pitch,
+          setPitch,
+          setSpeed,
+          setVoice,
+          fetchRandomWord,
+          speakWord,
+          onMeaningPressed
+        }
+      }>
+      <Settings/>
+      </SettingsContext.Provider>
+
       <div className="flex flex-col w-full h-full ">
         <div className="flex justify-center flex-col flex-grow">
           <div className="flex flex-col justify-center m-52">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState ,useContext,createContext } from "react";
 import {
   Select,
   SelectContent,
@@ -10,19 +10,18 @@ import {
 } from "@/components/ui/select";
 import { Button } from "./ui/button";
 import SettingsPanel from "./settingsPanel";
+import { useSettingsContext } from "./SettingsContext";
 
-export default function Settings(props: {
-  next: Function;
-  speak: Function;
-  pitch: number;
-  speed: number;
-  voice: SpeechSynthesisVoice | null;
-  setPitch: Function;
-  setSpeed: Function;
-  setVoice: Function;
-  meaning: Function;
-}) {
+export default function Settings() {
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
+
+
+
+const {
+  fetchRandomWord,
+  speakWord,
+  onMeaningPressed,
+} = useSettingsContext();
 
 
 
@@ -31,12 +30,6 @@ export default function Settings(props: {
       <SettingsPanel
         isOpen={isSettingsPanelOpen}
         setIsOpen={setIsSettingsPanelOpen}
-        pitch={props.pitch}
-        speed={props.speed}
-        voice={props.voice}
-        setPitch={props.setPitch}
-        setSpeed={props.setSpeed}
-        setVoice={props.setVoice}
       />
       <Button
         variant="ghost"
@@ -68,7 +61,7 @@ export default function Settings(props: {
       <Button
         variant="ghost"
         className="text-gray-400 hover:text-gray-100 my-auto"
-        onClick={() => {props.meaning()}}
+        onClick={() => {onMeaningPressed();}}
       >
         Meaning
       </Button>
@@ -76,7 +69,7 @@ export default function Settings(props: {
         variant="ghost"
         className="text-gray-400 hover:text-gray-100 my-auto"
         onClick={() => {
-          props.speak();
+          speakWord();
         }}
       >
         Speak
@@ -85,7 +78,7 @@ export default function Settings(props: {
         variant="ghost"
         className="text-gray-400 hover:text-gray-100 my-auto"
         onClick={() => {
-          props.next();
+          fetchRandomWord();
         }}
       >
         Next

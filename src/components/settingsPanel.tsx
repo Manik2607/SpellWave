@@ -1,24 +1,29 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
+import {useSettingsContext} from "./SettingsContext";
 const SettingsPanel = (props: {
   isOpen: Boolean;
-  pitch: number;
-  speed: number;
-  voice: SpeechSynthesisVoice | null;
-  setIsOpen: Function;
-  setPitch: Function;
-  setSpeed: Function;
-  setVoice: Function;
+  setIsOpen: Function
 }) => {
+
+
+  const {
+    pitch,
+    speed,
+    voice,
+    setPitch,
+    setSpeed,
+    setVoice,
+  } = useSettingsContext();
   const [text, setText] = useState("Hello, I am a text to speech engine");
 
   const voices = window.speechSynthesis.getVoices();
   const speakString = () => {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = props.voice;
-    utterance.pitch = props.pitch;
-    utterance.rate = props.speed;
+    utterance.voice = voice;
+    utterance.pitch = pitch;
+    utterance.rate = speed;
     window.speechSynthesis.speak(utterance);
   };
   return (
@@ -46,8 +51,8 @@ const SettingsPanel = (props: {
                     min="0"
                     max="3"
                     step="0.1"
-                    value={props.pitch}
-                    onChange={(e) => props.setPitch(parseFloat(e.target.value))}
+                    value={pitch}
+                    onChange={(e) => setPitch(parseFloat(e.target.value))}
                     className="w-full"
                   />
                 </div>
@@ -58,17 +63,17 @@ const SettingsPanel = (props: {
                     min="0.3"
                     max="3"
                     step="0.1"
-                    value={props.speed}
-                    onChange={(e) => props.setSpeed(parseFloat(e.target.value))}
+                    value={speed}
+                    onChange={(e) => setSpeed(parseFloat(e.target.value))}
                     className="w-full"
                   />
                 </div>
                 <div className="mb-4">
                   <label className="block mb-2">Speaker</label>
                   <select
-                    value={props.voice?.name}
+                    value={voice?.name}
                     onChange={(e) =>
-                      props.setVoice(
+                      setVoice(
                         voices.find((v) => v.name === e.target.value) || null
                       )
                     }
