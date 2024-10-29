@@ -8,6 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 
 import SettingsContext from "./SettingsContext";
 
+import { ask } from "@/lib/ai";
+
 export default function Main() {
   const { toast } = useToast();
 
@@ -23,39 +25,28 @@ export default function Main() {
   const [speed, setSpeed] = useState(1);
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
 
-
-
-
-
+  const [difficulty, setDifficulty] = useState("medium");
+  const [numOfChar, setNumOfChar] = useState(7);
 
   //show a card with meaning of the word using dictonary api
   const onMeaningPressed = async () => {
-    try {
-      const response = await fetch(
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      if (
-        data &&
-        data.length > 0 &&
-        data[0].meanings &&
-        data[0].meanings.length > 0
-      ) {
+      const format = "format the response as plane text with less than 3 lines,dont write the word, without additional commentary or examples. just meaning.";
+      const prompt = `What is the meaning of the word "${word}"? ${format}`;
+      
+      ask(prompt).then((meaning) => {
+        console.log(meaning);
         toast({
           title: word,
-          description: data[0].meanings[0].definitions[0].definition,
+          description: meaning,
         });
-        console.log(data[0].meanings[0].definitions[0].definition);
-      } else {
-        console.log("No definition found");
-      }
-    } catch (error) {
-      console.error("Error fetching the word meaning:", error);
-      console.log("Error fetching the word meaning");
-    }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+
+
+
   };
   const { width, height } =
     typeof window !== "undefined"
@@ -80,19 +71,25 @@ export default function Main() {
     CheckSpell();
   }, [inputWord]);
   const fetchRandomWord = async () => {
-    //randome no between 3 and 8
-    const no = Math.floor(Math.random() * 5) + 4;
-    var url = `https://api.datamuse.com/words?sp=`;
-    for (let i = 0; i < no; i++) {
-      url += "?";
-    }
+
     setInputWord("");
-    const response = await fetch(url);
-    const data = await response.json();
-    const index = Math.floor(Math.random() * data.length);
-    setWord(data[index].word);
-    console.log(data[index].word);
-    speakString(data[index].word);
+    const format = "Format the response as plain text, one word per line, without titles, numbers, or additional content.";
+    const prompt = `List commonly used, ${difficulty}-difficulty single words that are ${numOfChar} letters long and important for students to spell.`;
+
+
+    ask(prompt + format)
+      .then((res) => {
+        //randome index
+        var randoneIndex = Math.floor(Math.random() * res.split("\n").length);
+        var theWord = res.split("\n")[randoneIndex].toLowerCase().trim();
+        setWord(theWord);
+        console.log(theWord);
+        speakString(theWord);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
   };
   const speakWord = () => {
     const utterance = new SpeechSynthesisUtterance(word);
@@ -177,7 +174,7 @@ export default function Main() {
       fetchRandomWord();
     } else if (currentlyPressedKeys["`"]) {
       speakWord();
-    }else if(currentlyPressedKeys[" "]){
+    } else if (currentlyPressedKeys[" "]) {
       onMeaningPressed();
     }
   }, [currentlyPressedKeys]);
@@ -186,20 +183,24 @@ export default function Main() {
     <>
       {false && <Confetti numberOfPieces={500} width={width} height={height} />}
       <Toaster />
-      <SettingsContext.Provider value={
-        {
+      <SettingsContext.Provider
+        value={{
           voice,
           speed,
           pitch,
+          difficulty,
+          numOfChar,
           setPitch,
           setSpeed,
           setVoice,
+          setDifficulty,
+          setNumOfChar,
           fetchRandomWord,
           speakWord,
-          onMeaningPressed
-        }
-      }>
-      <Settings/>
+          onMeaningPressed,
+        }}
+      >
+        <Settings />
       </SettingsContext.Provider>
 
       <div className="flex flex-col w-full h-full ">

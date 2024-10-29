@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -11,19 +11,19 @@ import {
 import { Button } from "./ui/button";
 import SettingsPanel from "./settingsPanel";
 import { useSettingsContext } from "./SettingsContext";
+import { Input } from "./ui/input";
 
 export default function Settings() {
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
 
-
-
-const {
-  fetchRandomWord,
-  speakWord,
-  onMeaningPressed,
-}   = useSettingsContext();
-
-
+  const {
+    fetchRandomWord,
+    speakWord,
+    onMeaningPressed,
+    numOfChar,
+    setDifficulty,
+    setNumOfChar,
+  } = useSettingsContext();
 
   return (
     <div className="bg-accent px-2 py-1 flex rounded-xl mx-48">
@@ -39,9 +39,14 @@ const {
         Settings
       </Button>
       <span className="w-2 h-10 bg-background rounded-lg"></span>
-
-      <Select>
-        <SelectTrigger className="w-[180px] my-auto mx-4 text-gray-400 hover:text-gray-100">
+      <Input
+        className="w-[80px] my-auto mx-2 text-gray-400"
+        type="number"
+        value={numOfChar}
+        onChange={(e) => setNumOfChar(parseInt(e.target.value))}
+      />
+      <Select onValueChange={(v) => setDifficulty(v)}>
+        <SelectTrigger className="w-[180px] my-auto text-gray-400 hover:text-gray-100">
           <SelectValue placeholder="Select Difficulty" />
         </SelectTrigger>
         <SelectContent>
@@ -54,14 +59,15 @@ const {
             <SelectItem value="very hard">Very hard</SelectItem>
           </SelectGroup>
         </SelectContent>
-
         <div className="w-full"></div>
       </Select>
 
       <Button
         variant="ghost"
         className="text-gray-400 hover:text-gray-100 my-auto"
-        onClick={() => {onMeaningPressed();}}
+        onClick={() => {
+          onMeaningPressed();
+        }}
       >
         Meaning
       </Button>

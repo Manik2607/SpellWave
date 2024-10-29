@@ -5,8 +5,12 @@ interface SettingsContextType {
   voice: SpeechSynthesisVoice | null;
   speed: number;
   pitch: number;
+  difficulty: string;
+  numOfChar: number;
   setPitch: React.Dispatch<React.SetStateAction<number>>;
   setSpeed: React.Dispatch<React.SetStateAction<number>>;
+  setDifficulty: React.Dispatch<React.SetStateAction<string>>;
+  setNumOfChar: React.Dispatch<React.SetStateAction<number>>;
   setVoice: React.Dispatch<React.SetStateAction<SpeechSynthesisVoice | null>>;
   fetchRandomWord: Function;
   speakWord: Function;
