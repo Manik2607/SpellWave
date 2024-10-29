@@ -1,4 +1,4 @@
-import { useState ,useContext,createContext } from "react";
+import { useState} from "react";
 import {
   Select,
   SelectContent,
@@ -21,7 +21,7 @@ const {
   fetchRandomWord,
   speakWord,
   onMeaningPressed,
-} = useSettingsContext();
+}   = useSettingsContext();
 
 
 
